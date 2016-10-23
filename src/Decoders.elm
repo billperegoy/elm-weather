@@ -5,7 +5,6 @@ import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (..)
 
 
--- http://api.wunderground.com/api/c83a6598d579714d/conditions/q/CA/San_Francisco.json
 -- Here is an example of the weather underground API output
 {--
  { "current_observation" :
