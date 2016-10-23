@@ -5,27 +5,12 @@ import Expect
 import String
 import Decoders
 import Json.Decode exposing (int, string, float, Decoder)
-
-
-success : Result a b -> Bool
-success result =
-    case result of
-        Ok _ ->
-            True
-
-        Err _ ->
-            False
+import TestUtils exposing (..)
 
 
 runCurrentObserverDecoder json =
     Json.Decode.decodeString
         Decoders.currentObservationDecoder
-        json
-
-
-runWeatherConditionsDecoder json =
-    Json.Decode.decodeString
-        Decoders.weatherConditionsDecoder
         json
 
 
@@ -35,12 +20,22 @@ decodesGoodTemperature =
         \() ->
             let
                 input =
-                    """ { "temp_f" : 98.6 } """
+                    """
+                      { "city" : "Boston",
+                          "state" : "MA",
+                          "temp_f" : 98.6 }
+                    """
 
                 decodedOutput =
                     runCurrentObserverDecoder input
             in
-                Expect.equal decodedOutput (Ok { tempF = 98.6 })
+                Expect.equal decodedOutput
+                    (Ok
+                        { city = "Boston"
+                        , state = "MA"
+                        , tempF = 98.6
+                        }
+                    )
 
 
 allowsExtraJsonFields : Test
@@ -49,12 +44,23 @@ allowsExtraJsonFields =
         \() ->
             let
                 input =
-                    """ { "weather" : "clear", "temp_f" : 98.6 } """
+                    """
+                       { "weather" : "clear",
+                          "city" : "Boston",
+                          "state" : "MA",
+                          "temp_f" : 98.6 }
+                    """
 
                 decodedOutput =
                     runCurrentObserverDecoder input
             in
-                Expect.equal decodedOutput (Ok { tempF = 98.6 })
+                Expect.equal decodedOutput
+                    (Ok
+                        { city = "Boston"
+                        , state = "MA"
+                        , tempF = 98.6
+                        }
+                    )
 
 
 failsWithNonNumericTemperature : Test
@@ -85,48 +91,9 @@ failsIfNoTempSpecified =
                 Expect.equal (success decodedOutput) False
 
 
-goodWeatherConditions : Test
-goodWeatherConditions =
-    test "Properly processes weather conditions" <|
-        \() ->
-            let
-                input =
-                    """ { "current_observation" : { "temp_f" : 98.6 }} """
-
-                decodedOutput =
-                    runWeatherConditionsDecoder input
-            in
-                Expect.equal decodedOutput
-                    (Ok
-                        { currentObservation =
-                            { tempF =
-                                98.6
-                            }
-                        }
-                    )
-
-
-badWeatherConditions : Test
-badWeatherConditions =
-    test "Properly processes weather conditions" <|
-        \() ->
-            let
-                input =
-                    """ { "no_current_observation" :
-                           { "temp_f" : 98.6 }
-                        } """
-
-                decodedOutput =
-                    runWeatherConditionsDecoder input
-            in
-                Expect.equal (success decodedOutput) False
-
-
 tests =
     [ decodesGoodTemperature
     , allowsExtraJsonFields
     , failsWithNonNumericTemperature
     , failsIfNoTempSpecified
-    , goodWeatherConditions
-    , badWeatherConditions
     ]

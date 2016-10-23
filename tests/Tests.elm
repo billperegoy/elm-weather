@@ -1,25 +1,18 @@
 module Tests exposing (..)
 
 import Test exposing (..)
-import Expect
 import CurrentObservationTests
+import WeatherConditionsTests
 
 
 tests : List (List Test)
 tests =
     [ CurrentObservationTests.tests
-    , otherTests
-    ]
-
-
-otherTests =
-    [ test "Dummy Test" <|
-        \() ->
-            Expect.equal 1 1
+    , WeatherConditionsTests.tests
     ]
 
 
 all : Test
 all =
-    describe "All Decoder Tests"
+    describe "elm-weather tests"
         (List.concat tests)
