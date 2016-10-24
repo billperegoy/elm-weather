@@ -8,6 +8,7 @@ import Json.Decode exposing (int, string, float, Decoder)
 import TestUtils exposing (..)
 
 
+runCurrentObserverDecoder : String -> Result String Decoders.CurrentObservation
 runCurrentObserverDecoder json =
     Json.Decode.decodeString
         Decoders.currentObservationDecoder

@@ -8,6 +8,7 @@ import Json.Decode exposing (int, string, float, Decoder)
 import TestUtils exposing (..)
 
 
+runWeatherConditionsDecoder : String -> Result String Decoders.WeatherConditions
 runWeatherConditionsDecoder json =
     Json.Decode.decodeString
         Decoders.weatherConditionsDecoder
