@@ -27,8 +27,12 @@ decodesGoodTemperature =
                           "temp_f" : 98.6 }
                     """
 
+                --decodedOutput =
+                --   runCurrentObserverDecoder input
                 decodedOutput =
-                    runCurrentObserverDecoder input
+                    Json.Decode.decodeString
+                        Decoders.currentObservationDecoder
+                        input
             in
                 Expect.equal decodedOutput
                     (Ok

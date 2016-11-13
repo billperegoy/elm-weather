@@ -3,7 +3,9 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.App as Html
 import Html.Attributes exposing (..)
-import Utils
+import Time exposing (..)
+import Date exposing (..)
+import Task exposing (..)
 
 
 main : Program Never
@@ -21,12 +23,12 @@ main =
 
 
 type alias Model =
-    { name : String }
+    { lastUpdateTime : Time }
 
 
 init : ( Model, Cmd Msg )
 init =
-    Model "world" ! []
+    Model 0.0 ! [ Task.perform Error UpdateWeather Time.now ]
 
 
 
@@ -34,13 +36,17 @@ init =
 
 
 type Msg
-    = NoOp
+    = UpdateWeather Time
+    | Error String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NoOp ->
+        UpdateWeather time ->
+            { model | lastUpdateTime = time } ! []
+
+        Error _ ->
             model ! []
 
 
@@ -50,8 +56,13 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    h1 []
-        [ text ("Hello " ++ (Utils.capitalize model.name)) ]
+    p []
+        [ text
+            (model.lastUpdateTime
+                |> Date.fromTime
+                |> toString
+            )
+        ]
 
 
 
@@ -60,4 +71,4 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Time.every Time.minute UpdateWeather
