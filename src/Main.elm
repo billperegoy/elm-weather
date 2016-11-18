@@ -1,14 +1,13 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.App as Html
 import Html.Attributes exposing (..)
 import Time exposing (..)
 import Date exposing (..)
 import Task exposing (..)
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
     Html.program
         { init = init
@@ -28,7 +27,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    Model 0.0 ! [ Task.perform Error UpdateWeather Time.now ]
+    Model 0.0 ! [ Task.perform UpdateWeather Time.now ]
 
 
 
@@ -37,7 +36,6 @@ init =
 
 type Msg
     = UpdateWeather Time
-    | Error String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -45,9 +43,6 @@ update msg model =
     case msg of
         UpdateWeather time ->
             { model | lastUpdateTime = time } ! []
-
-        Error _ ->
-            model ! []
 
 
 
