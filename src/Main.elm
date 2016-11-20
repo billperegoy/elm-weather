@@ -97,6 +97,7 @@ update msg model =
                     { model
                         | temperature = weather.currentObservation.tempF
                         , history = updateHistory model weather.currentObservation.tempF
+                        , error = ""
                     }
                         ! []
 
@@ -133,6 +134,16 @@ timeToDateString time =
 
 -- ++ ":"
 -- ++ (Date.second date |> toString |> zeroExtend)
+
+
+errorDisplay : Model -> Html Msg
+errorDisplay model =
+    if model.error /= "" then
+        div
+            [ class "alert alert-danger" ]
+            [ text (String.slice 0 79 model.error) ]
+    else
+        div [] []
 
 
 temperatureHistory : List TemperatureReading -> Html Msg
@@ -176,7 +187,8 @@ currentConditions model =
 view : Model -> Html Msg
 view model =
     div [ class "container" ]
-        [ currentConditions model
+        [ errorDisplay model
+        , currentConditions model
         , temperatureHistory model.history
         ]
 
