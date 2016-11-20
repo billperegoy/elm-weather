@@ -35,9 +35,7 @@ goodWeatherConditions =
                 Expect.equal decodedOutput
                     (Ok
                         { currentObservation =
-                            { city = "Boston"
-                            , state = "MA"
-                            , tempF = 98.6
+                            { tempF = 98.6
                             }
                         }
                     )

@@ -36,9 +36,7 @@ decodesGoodTemperature =
             in
                 Expect.equal decodedOutput
                     (Ok
-                        { city = "Boston"
-                        , state = "MA"
-                        , tempF = 98.6
+                        { tempF = 98.6
                         }
                     )
 
@@ -61,9 +59,7 @@ allowsExtraJsonFields =
             in
                 Expect.equal decodedOutput
                     (Ok
-                        { city = "Boston"
-                        , state = "MA"
-                        , tempF = 98.6
+                        { tempF = 98.6
                         }
                     )
 

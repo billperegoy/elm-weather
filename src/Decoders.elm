@@ -23,18 +23,19 @@ type alias WeatherConditions =
 
 
 type alias CurrentObservation =
-    { city : String
-    , state : String
-    , tempF : Float
+    { --city : String
+      --, state : String
+      tempF : Float
     }
 
 
 currentObservationDecoder : Decoder CurrentObservation
 currentObservationDecoder =
     decode CurrentObservation
-        |> Json.Decode.Pipeline.required "city" Json.Decode.string
-        |> Json.Decode.Pipeline.required "state" Json.Decode.string
-        |> Json.Decode.Pipeline.required "temp_f" Json.Decode.float
+        --   |> Json.Decode.Pipeline.required "city" Json.Decode.string
+        --   |> Json.Decode.Pipeline.required "state" Json.Decode.string
+        |>
+            Json.Decode.Pipeline.required "temp_f" Json.Decode.float
 
 
 weatherConditionsDecoder : Decoder WeatherConditions
