@@ -8,6 +8,7 @@ import Task exposing (..)
 import Http exposing (..)
 import Decoders
 import ApiKeys
+import HttpUtils
 
 
 main : Program Never Model Msg
@@ -91,18 +92,16 @@ update msg model =
         UpdateTime time ->
             { model | lastUpdateTime = time } ! [ getCurrentConditions ]
 
-        UpdateWeather result ->
-            case result of
-                Ok weather ->
-                    { model
-                        | temperature = weather.currentObservation.tempF
-                        , history = updateHistory model weather.currentObservation.tempF
-                        , error = ""
-                    }
-                        ! []
+        UpdateWeather (Ok weather) ->
+            { model
+                | temperature = weather.currentObservation.tempF
+                , history = updateHistory model weather.currentObservation.tempF
+                , error = ""
+            }
+                ! []
 
-                Err error ->
-                    { model | error = toString error } ! []
+        UpdateWeather (Err error) ->
+            { model | error = HttpUtils.errorString error } ! []
 
 
 
@@ -129,11 +128,6 @@ timeToDateString time =
             ++ (Date.hour date |> toString |> zeroExtend)
             ++ ":"
             ++ (Date.minute date |> toString |> zeroExtend)
-
-
-
--- ++ ":"
--- ++ (Date.second date |> toString |> zeroExtend)
 
 
 errorDisplay : Model -> Html Msg
